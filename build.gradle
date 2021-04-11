@@ -1,0 +1,41 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.4.32'
+}
+
+group 'io.github.daruma256'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    maven {
+        name 'm2-dv8tion'
+        url 'https://m2.dv8tion.net/releases'
+    }
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+processResources {
+    filteringCharset = 'UTF-8'
+}
+
+configurations {
+    embed
+    compile.extendsFrom(embed)
+}
+
+dependencies {
+    embed "org.jetbrains.kotlin:kotlin-stdlib"
+    embed 'net.dv8tion:JDA:4.2.1_253'
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'io.github.daruma256.MainKt'
+        )
+    }
+    from configurations.embed.findAll { !it.name.endsWith('pom') }.collect { it.isDirectory() ? it : zipTree(it) }
+}
