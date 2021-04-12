@@ -14,10 +14,12 @@ import java.net.URL
 import java.util.*
 import java.util.regex.Pattern
 
-
 class Window: Initializable {
     @FXML lateinit var checkbox: CheckBox
-    private var isChecked: Boolean = false
+
+    companion object {
+        var isChecked: Boolean = false
+    }
 
     @FXML lateinit var button: Button
 

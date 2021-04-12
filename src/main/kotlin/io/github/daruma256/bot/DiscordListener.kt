@@ -1,5 +1,11 @@
 package io.github.daruma256.bot
 
+import io.github.daruma256.Main
+import io.github.daruma256.controller.Window
+import io.github.daruma256.sound.SoundUtil
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import java.util.regex.Pattern
@@ -21,5 +27,9 @@ class DiscordListener: ListenerAdapter() {
             return
         }
         DiscordUtil.newId = text
+
+        if (!Window.isChecked) {
+            SoundUtil.play()
+        }
     }
 }

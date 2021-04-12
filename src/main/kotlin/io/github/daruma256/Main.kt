@@ -10,14 +10,13 @@ import javafx.scene.control.Alert.AlertType
 import javafx.stage.Stage
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.entities.Activity
+import java.awt.Toolkit
 import java.io.File
 import java.io.InputStream
-import java.lang.NumberFormatException
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.*
-import java.util.regex.Pattern
 
 object Main {
     lateinit var STAGE: Stage
@@ -49,12 +48,29 @@ object Main {
         }
     }
 
+    fun loadAlertSound() {
+        val protectionDomain = this.javaClass.protectionDomain
+        val codeSource = protectionDomain.codeSource
+        val uri = codeSource.location.toURI()
+        val path = Paths.get(uri).parent
+        val alertFile = File(path.resolve("config/alert.wav").toUri())
+
+        //サウンドファイル存在確認
+        if (!alertFile.exists()) {
+            //存在しなかった場合jar内からデフォルト値を展開
+            val srcIs: InputStream = ClassLoader.getSystemResourceAsStream("config/alert.wav")
+                ?: return//jar内にもファイルが存在しない場合
+            Files.copy(srcIs, path.resolve("config/alert.wav"))
+        }
+    }
+
     fun connectDiscord() {
         DiscordUtil.botToken = PROPERTY.getProperty("bot_token", "")
         if (DiscordUtil.botToken.isEmpty()) {
             val alert = Alert(AlertType.ERROR)
             alert.headerText = null
             alert.contentText = "DiscordBotのtokenが未入力です"
+            Toolkit.getDefaultToolkit().beep()
             alert.showAndWait()
             Platform.exit()
             return
@@ -69,6 +85,7 @@ object Main {
             val alert = Alert(AlertType.ERROR)
             alert.headerText = null
             alert.contentText = "DiscordBotのGuildIdが未入力か不正な値です"
+            Toolkit.getDefaultToolkit().beep()
             alert.showAndWait()
             Platform.exit()
             return
@@ -83,6 +100,7 @@ object Main {
             val alert = Alert(AlertType.ERROR)
             alert.headerText = null
             alert.contentText = "DiscordBotのChannelIdが未入力か不正な値です"
+            Toolkit.getDefaultToolkit().beep()
             alert.showAndWait()
             Platform.exit()
             return
@@ -98,6 +116,7 @@ object Main {
 
 fun main(args: Array<String>) {
     Main.loadConfig()
+    Main.loadAlertSound()
 
     Application.launch(AppMain().javaClass, *args)
 }

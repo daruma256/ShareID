@@ -29,6 +29,7 @@ configurations {
 dependencies {
     embed "org.jetbrains.kotlin:kotlin-stdlib"
     embed 'net.dv8tion:JDA:4.2.1_253'
+    embed 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3'
 }
 
 jar {
